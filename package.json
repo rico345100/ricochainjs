@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build-prod;npm run serve",
     "build": "node index; babel ./src -d ./build --copy-files",
-    "build-dev": "NODE_ENV=development npm run build", 
+    "build-dev": "NODE_ENV=development npm run build",
     "build-prod": "NODE_ENV=production npm run build",
     "serve": "node ./build/index.js",
     "flow": "flow",
@@ -28,9 +28,8 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.4",
     "babel-preset-flow": "^6.23.0",
-    "flow-cli": "0.0.0-pre"
-  },
-  "dependencies": {
+    "flow-bin": "^0.95.1",
     "nodemon": "^1.18.10"
-  }
+  },
+  "dependencies": {}
 }
