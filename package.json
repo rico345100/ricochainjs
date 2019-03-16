@@ -31,5 +31,7 @@
     "flow-bin": "^0.95.1",
     "nodemon": "^1.18.10"
   },
-  "dependencies": {}
+  "dependencies": {
+    "crypto-js": "^3.1.9-1"
+  }
 }

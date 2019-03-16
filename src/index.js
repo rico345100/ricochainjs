@@ -1,11 +1,14 @@
 /* @flow */
+const Blockchain = require('./Blockchain');
+const Block = require('./Block');
 
-const a:number = 10;
-const b:number = 20;
+const testChain = new Blockchain();
 
-const sum = (a:number, b:number): number => a + b;
+console.log('Mining Block...');
+testChain.addBlock(new Block(1, new Date().getTime().toString(), "First Block"));
 
-console.log(sum(a, b));
+console.log('Mining Block...');
+testChain.addBlock(new Block(2, new Date().getTime().toString(), "Second Block"));
 
-// Wrong
-// const c:string = 30;     // Uncomment this line and try run "npm start" will fail with error message!
+console.log(JSON.stringify(testChain, null, 4));
+console.log('Is blockchain valid: ' + testChain.checkValid().toString());
