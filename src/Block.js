@@ -1,39 +1,41 @@
 /* @flow */
 const SHA256 = require('crypto-js/sha256');
+const Transaction = require('./Transaction');
+
+interface BlockParameters {
+  id: number;
+  timestamp: string;
+  previousHash?: string;
+  transactions: Transaction[];
+  data?: string;
+}
 
 class Block {
   // property types
-  index: number;
+  id: number;
   timestamp: string;
-  data: string;
-  previousHash: string;
   hash: string;
-  nonce: number;
+  previousHash: ?string;
+  transactions: Transaction[];
+  data: string;
+  
+  constructor(param: BlockParameters) {
+    this.id = param.id;
+    this.timestamp = param.timestamp;
 
-  constructor(index: number, timestamp: string, data: string, previousHash: ?string) {
-    this.index = index;
-    this.timestamp = timestamp;
-    this.data = data;
-
-    if(previousHash) {
-      this.previousHash = previousHash;
+    if(param.previousHash) {
+      this.previousHash = param.previousHash;
+    } else {
+      this.previousHash = null;
     }
 
     this.hash = this.calculateHash();
-    this.nonce = 0;
+    this.data = param.data || '';
+    this.transactions = param.transactions;
   }
 
   calculateHash(): string {
-    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
-  }
-
-  mineBlock(difficulty: number) {
-    while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
-      this.nonce++;
-      this.hash = this.calculateHash();
-    }
-
-    console.log("Block Mined: " + this.hash);
+    return SHA256(this.id + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
   }
 }
 

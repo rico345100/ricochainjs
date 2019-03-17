@@ -1,34 +1,32 @@
 /* @flow */
 const Block = require('./Block');
 
+interface BlockchainParameters {
+  initialBlocks?: Block[];
+}
+
 class Blockchain {
   // property types
-  chain: Block[]
-  difficulty: number;
+  static blocks: Block[];
 
-  constructor() {
-    this.chain = [this.createGenesisBlock()];
-    this.difficulty = 4;
+  static getLastBlock(): Block {
+    return Blockchain.blocks[Blockchain.blocks.length - 1];
   }
 
-  createGenesisBlock(): Block {
-    return new Block(0, new Date().getTime().toString(), "Genesis Block", "0");
+  static addBlock(newBlock: Block) {
+    const lastBlock = Blockchain.getLastBlock();
+
+    if(lastBlock) {
+      newBlock.previousHash = lastBlock.hash;
+    }
+    
+    Blockchain.blocks.push(newBlock);
   }
 
-  latestBlock(): Block {
-    return this.chain[this.chain.length - 1];
-  }
-
-  addBlock(newBlock: Block) {
-    newBlock.previousHash = this.latestBlock().hash;
-    newBlock.mineBlock(this.difficulty);
-    this.chain.push(newBlock);
-  }
-
-  checkValid(): boolean {
-    for(let i = 0; i < this.chain.length; i++) {
-      const currentBlock = this.chain[i];
-      const previousBlock = this.chain[i - 1];
+  static checkValid(): boolean {
+    for(let i = 0; i < Blockchain.blocks.length; i++) {
+      const currentBlock = Blockchain.blocks[i];
+      const previousBlock = Blockchain.blocks[i - 1];
 
       if(currentBlock.hash !== currentBlock.calculateHash()) {
         return false;
@@ -42,5 +40,7 @@ class Blockchain {
     return true;
   }
 }
+
+Blockchain.blocks = [];
 
 module.exports = Blockchain;

@@ -1,14 +1,30 @@
 /* @flow */
 const Blockchain = require('./Blockchain');
 const Block = require('./Block');
+const { getTimestamp } = require('./utils/timestamp');
 
-const testChain = new Blockchain();
+// Create Genesis Block
+const genesisBlock = new Block({
+  id: 0,
+  timestamp: getTimestamp(),
+  previousHash: '',
+  transactions: [],
+  data: 'Genesis Block'
+});
 
-console.log('Mining Block...');
-testChain.addBlock(new Block(1, new Date().getTime().toString(), "First Block"));
+Blockchain.addBlock(genesisBlock);
 
-console.log('Mining Block...');
-testChain.addBlock(new Block(2, new Date().getTime().toString(), "Second Block"));
+const { mineBlock } = require('./modules/mining');
 
-console.log(JSON.stringify(testChain, null, 4));
-console.log('Is blockchain valid: ' + testChain.checkValid().toString());
+(async function main() {
+  try {
+    const newBlock = await mineBlock();
+    console.log("Block Mined: " + newBlock.hash);
+  } catch (err){ 
+    console.log(`Error while mining: ${err.message}`);
+    console.log(err.stack);
+  }  
+
+  console.log(JSON.stringify(Blockchain.blocks, null, 4));
+  // console.log('Is blockchain valid: ' + testChain.checkValid().toString());
+})();
